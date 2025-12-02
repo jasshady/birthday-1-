@@ -7,7 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Sacramento&family=Work+Sans:wght@300;400;600&display=swap" rel="stylesheet">
     
     <style>
-        /* --- CSS STYLES --- */
         body {
             margin: 0;
             overflow: hidden;
@@ -110,6 +109,21 @@
             transform: scale(0.95);
         }
 
+        /* SYNC HELPER (Hidden by default unless enabled in JS) */
+        #debug-time {
+            display: none; /* Change to 'block' in JS to see timer */
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 1.2rem;
+            z-index: 1000;
+        }
+
         #letter-modal {
             display: none;
             position: fixed;
@@ -175,6 +189,8 @@
     </audio>
 
     <div id="canvas-container"></div>
+    
+    <div id="debug-time">0.00</div>
 
     <div id="ui">
         <h1>Happy Birthday To Mine Babygirl 💖</h1>
@@ -212,40 +228,59 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     
     <script>
-        // --- LYRIC TIMINGS ---
+        // --- !!! SYNC MODE !!! ---
+        // Set this to TRUE if you want to see the timer in the corner to fix lyrics.
+        // Set to FALSE when you are done.
+        var debugMode = false; 
+
+        // --- UPDATED LYRIC TIMINGS (Faster/Earlier) ---
         const lyrics = [
             { time: 0, text: "Happy Birthday my love..." },
             { time: 5, text: "Wait for it..." },
+            
+            // Intro Ends 26s
             { time: 26.5, text: "Tu hai wo jo raat jagaaye" },
-            { time: 33.0, text: "Tujh par saare khwab lutaaye" },
-            { time: 39.0, text: "Tu jaise maati ki khushbu" },
-            { time: 45.0, text: "Dheeme dheeme badhti hi jaaye" },
-            { time: 50.0, text: "..." },
-            { time: 54.0, text: "Jo khud se bhi kahi naa..." },
-            { time: 59.0, text: "Tujhe wo baat batani hai" },
-            { time: 65.0, text: "Koi aata jaata kissa nahin" },
-            { time: 72.0, text: "Tu meri poori kahani hai" },
-            { time: 75.0, text: "♫ ♫ ♫" },
-            { time: 78.0, text: "Koi aata jaata kissa nahin" },
-            { time: 83.0, text: "Tu meri poori kahani hai" },
-            { time: 88.0, text: "♫ ♫ ♫" },
-            { time: 90.0, text: "Dil apna khol dikhaun" },
-            { time: 96.0, text: "Jaisa hun tere saamne aaun" },
-            { time: 102.0, text: "Ab tak naa khul ke jiya" },
-            { time: 108.0, text: "Befikra tere sath ho jaaun" },
-            { time: 114.0, text: "♫ ♫ ♫" },
-            { time: 115.5, text: "Hun main zara khud se khafa" },
-            { time: 120.0, text: "Tujhse naa kyun pehle mila" },
-            { time: 125.0, text: "Jo ab tu mujhko mila hai" },
-            { time: 130.0, text: "Tujhko hi duniya banaun" },
-            { time: 134.5, text: "Suni saari dopehren" },
-            { time: 139.0, text: "Tere sang hi bitaani hai" },
-            { time: 145.0, text: "Koi aata jaata kissa nahin" },
-            { time: 151.0, text: "Tu meri poori kahani hai" },
-            { time: 160.0, text: "Tu meri poori kahani hai ❤️" }
+            { time: 30.0, text: "Tujh par saare khwab lutaaye" }, // Earlier
+            { time: 34.0, text: "Tu jaise maati ki khushbu" },   // Earlier
+            { time: 38.0, text: "Dheeme dheeme badhti hi jaaye" },// Earlier
+            
+            // First Break
+            { time: 43.0, text: "..." }, 
+
+            { time: 47.5, text: "Jo khud se bhi kahi naa..." },
+            { time: 51.5, text: "Tujhe wo baat batani hai" }, // Earlier
+            { time: 56.5, text: "Koi aata jaata kissa nahin" }, // Earlier
+            { time: 61.5, text: "Tu meri poori kahani hai" },  // Earlier
+            
+            // Break / Instrumental
+            { time: 66.0, text: "♫ ♫ ♫" }, 
+
+            { time: 70.5, text: "Koi aata jaata kissa nahin" },
+            { time: 75.5, text: "Tu meri poori kahani hai" },
+
+            // Break / Instrumental
+            { time: 80.0, text: "♫ ♫ ♫" }, 
+
+            { time: 85.0, text: "Dil apna khol dikhaun" },
+            { time: 89.0, text: "Jaisa hun tere saamne aaun" }, // Earlier
+            { time: 94.0, text: "Ab tak naa khul ke jiya" },    // Earlier
+            { time: 100.0, text: "Befikra tere sath ho jaaun" }, // Earlier
+            
+            // Break / Instrumental
+            { time: 106.0, text: "♫ ♫ ♫" }, 
+            
+            { time: 109.5, text: "Hun main zara khud se khafa" },
+            { time: 114.0, text: "Tujhse naa kyun pehle mila" },
+            { time: 119.5, text: "Jo ab tu mujhko mila hai" },
+            { time: 125.0, text: "Tujhko hi duniya banaun" },
+            { time: 129.5, text: "Suni saari dopehren" },
+            { time: 134.0, text: "Tere sang hi bitaani hai" },
+            { time: 139.5, text: "Koi aata jaata kissa nahin" },
+            { time: 145.5, text: "Tu meri poori kahani hai" },
+            { time: 153.0, text: "Tu meri poori kahani hai ❤️" }
         ];
 
-        // --- GLOBAL VARIABLES (FIXED: Declared outside init) ---
+        // --- GLOBAL VARIABLES ---
         var scene, camera, renderer, heartMesh, particlesMesh, controls;
         var isPulsing = true;
         var time = 0;
@@ -254,28 +289,29 @@
         function init() {
             var container = document.getElementById('canvas-container');
 
-            // 1. Create Scene (FIXED: Using global variable)
+            // Toggle Debug Timer
+            if(debugMode) {
+                document.getElementById('debug-time').style.display = 'block';
+            }
+
             scene = new THREE.Scene();
             scene.fog = new THREE.FogExp2(0xffdde1, 0.002);
 
-            // 2. Camera
             camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
             camera.position.z = 30;
 
-            // 3. Renderer
             renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(window.devicePixelRatio);
             container.appendChild(renderer.domElement);
 
-            // 4. Lights
             var ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
             scene.add(ambientLight);
             var pointLight = new THREE.PointLight(0xff6b81, 1);
             pointLight.position.set(10, 10, 20);
             scene.add(pointLight);
 
-            // 5. Heart Shape
+            // Heart Shape
             var heartShape = new THREE.Shape();
             var x = 0, y = 0;
             heartShape.moveTo(x + 5, y + 5);
@@ -291,14 +327,12 @@
             var material = new THREE.MeshPhongMaterial({ color: 0xff0040, shininess: 100, specular: 0x222222 });
             
             heartMesh = new THREE.Mesh(geometry, material);
-            
-            // --- ROTATION FIX ---
             geometry.center(); 
-            heartMesh.rotation.z = Math.PI; // Flip 180 degrees
+            heartMesh.rotation.z = Math.PI; 
             heartMesh.rotation.x = 0;       
             scene.add(heartMesh);
 
-            // 6. Particles
+            // Particles
             var particlesGeometry = new THREE.BufferGeometry();
             var particlesCount = 500;
             var posArray = new Float32Array(particlesCount * 3);
@@ -310,11 +344,9 @@
             particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
             scene.add(particlesMesh);
 
-            // 7. Controls
             controls = new THREE.OrbitControls(camera, renderer.domElement);
             controls.enableDamping = true;
 
-            // Start Animation Loop
             animate();
         }
 
@@ -342,6 +374,12 @@
             
             if (audio && !audio.paused) {
                 var currentTime = audio.currentTime - lyricOffset;
+                
+                // Show debug time if enabled
+                if(debugMode) {
+                    document.getElementById('debug-time').innerText = currentTime.toFixed(2);
+                }
+
                 // Find latest lyric
                 var currentLine = null;
                 for (var i = lyrics.length - 1; i >= 0; i--) {
@@ -364,7 +402,6 @@
         }
 
         // --- BUTTON FUNCTIONS ---
-        // Defined globally so buttons can ALWAYS see them
         function playMusic() {
             var music = document.getElementById('bg-music');
             if(music) {
@@ -410,7 +447,6 @@
             }
         });
 
-        // Initialize safely
         window.onload = init;
     </script>
 </body>
