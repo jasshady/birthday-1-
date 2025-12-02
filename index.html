@@ -211,7 +211,7 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     
     <script>
-        // --- LYRICS (Instrumental Gap added between 72s and 90s) ---
+        // --- UPDATED TIMINGS ---
         const lyrics = [
             { time: 0, text: "Happy Birthday my love..." },
             { time: 5, text: "Wait for it..." },
@@ -222,22 +222,30 @@
             { time: 39.0, text: "Tu jaise maati ki khushbu" },   
             { time: 45.0, text: "Dheeme dheeme badhti hi jaaye" },
             
-            { time: 54.0, text: "Jo khud se bhi kahi naa..." },
-            { time: 60.0, text: "Tujhe wo baat batani hai" }, 
-            { time: 66.0, text: "Koi aata jaata kissa nahin" }, 
-            { time: 72.0, text: "Tu meri poori kahani hai" },  
+            // Fixed: Moved this earlier to close the gap
+            { time: 49.5, text: "Jo khud se bhi kahi naa..." },
             
-            // --- INSTRUMENTAL GAP (No lyrics here) ---
-            { time: 76.0, text: "♫ ♫ ♫" }, 
-
-            // --- Next Verse Starts at 90s ---
-            { time: 90.0, text: "Dil apna khol dikhaun" },
-            { time: 96.0, text: "Jaisa hun tere saamne aaun" },
-            { time: 102.0, text: "Ab tak naa khul ke jiya" },
-            { time: 108.0, text: "Befikra tere sath ho jaaun" },
+            { time: 55.0, text: "Tujhe wo baat batani hai" }, 
+            { time: 61.0, text: "Koi aata jaata kissa nahin" }, 
+            { time: 66.0, text: "Tu meri poori kahani hai" },  
             
             // Instrumental
-            { time: 114.0, text: "♫ ♫ ♫" }, 
+            { time: 70.0, text: "♫ ♫ ♫" }, 
+
+            { time: 72.5, text: "Koi aata jaata kissa nahin" },
+            { time: 77.5, text: "Tu meri poori kahani hai" },
+
+            // Instrumental
+            { time: 82.0, text: "♫ ♫ ♫" }, 
+
+            // Fixed: Starts at 88.0 now
+            { time: 88.0, text: "Dil apna khol dikhaun" },
+            { time: 94.0, text: "Jaisa hun tere saamne aaun" },
+            { time: 100.0, text: "Ab tak naa khul ke jiya" },
+            { time: 106.0, text: "Befikra tere sath ho jaaun" },
+            
+            // Instrumental
+            { time: 112.0, text: "♫ ♫ ♫" }, 
             
             { time: 115.5, text: "Hun main zara khud se khafa" },
             { time: 120.0, text: "Tujhse naa kyun pehle mila" },
