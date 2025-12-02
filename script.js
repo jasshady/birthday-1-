@@ -1,4 +1,4 @@
-// Ensure code runs after the page loads to prevent "blank screen" issues
+// Waits for the page to load before running to prevent blank screen
 window.addEventListener('load', () => {
     
     // --- 1. Scene Setup ---
@@ -50,7 +50,7 @@ window.addEventListener('load', () => {
     });
 
     const heartMesh = new THREE.Mesh(geometry, material);
-    geometry.center(); // Crucial for rotation
+    geometry.center();
     heartMesh.rotation.z = Math.PI; 
     heartMesh.rotation.x = Math.PI; 
     scene.add(heartMesh);
@@ -111,7 +111,7 @@ window.addEventListener('load', () => {
 
     document.getElementById('music-btn').addEventListener('click', () => {
         if (music.paused) {
-            music.play().catch(e => alert("Interact with the page first!"));
+            music.play().catch(e => alert("Please click on the page first to enable audio!"));
         } else {
             music.pause();
         }
@@ -127,14 +127,17 @@ window.addEventListener('load', () => {
         controls.reset();
     });
 
+    // This opens the letter modal
     document.getElementById('letter-btn').addEventListener('click', () => {
         letterModal.style.display = 'flex';
     });
 
+    // This closes the letter modal
     closeBtn.addEventListener('click', () => {
         letterModal.style.display = 'none';
     });
 
+    // Closes modal if you click outside the letter box
     window.addEventListener('click', (event) => {
         if (event.target == letterModal) {
             letterModal.style.display = 'none';
