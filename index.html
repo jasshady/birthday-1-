@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Sacramento&family=Work+Sans:wght@300;400;600&display=swap" rel="stylesheet">
     
     <style>
+        /* --- CSS STYLES --- */
         body {
             margin: 0;
             overflow: hidden;
@@ -192,3 +193,225 @@
 
     <div id="letter-modal" onclick="closeLetter(event)">
         <div class="letter-content">
+            <span class="close-btn" onclick="closeLetter(event)">&times;</span>
+            <h2>💘 A Birthday Letter 💘</h2>
+            <p><b>Meri Jaan,</b></p>
+            <p>
+                Every time I see you, my heart skips a beat just like this pulsing heart on the screen.
+                You are the sweetest person I've ever known, you bring sweetness to every moment of my life.
+            </p>
+            <p>
+                You are mine darling, mine heart, mine everything. I hope this brings a smile
+                to your beautiful face and reminds you of how much you mean to me. Happy Birthday, my baby!
+            </p>
+            <p><b>Forever yours,<br>Your Sammy 💘</b></p>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    
+    <script>
+        // --- LYRIC TIMINGS ---
+        const lyrics = [
+            { time: 0, text: "Happy Birthday my love..." },
+            { time: 5, text: "Wait for it..." },
+            { time: 26.5, text: "Tu hai wo jo raat jagaaye" },
+            { time: 33.0, text: "Tujh par saare khwab lutaaye" },
+            { time: 39.0, text: "Tu jaise maati ki khushbu" },
+            { time: 45.0, text: "Dheeme dheeme badhti hi jaaye" },
+            { time: 50.0, text: "..." },
+            { time: 54.0, text: "Jo khud se bhi kahi naa..." },
+            { time: 59.0, text: "Tujhe wo baat batani hai" },
+            { time: 65.0, text: "Koi aata jaata kissa nahin" },
+            { time: 72.0, text: "Tu meri poori kahani hai" },
+            { time: 75.0, text: "♫ ♫ ♫" },
+            { time: 78.0, text: "Koi aata jaata kissa nahin" },
+            { time: 83.0, text: "Tu meri poori kahani hai" },
+            { time: 88.0, text: "♫ ♫ ♫" },
+            { time: 90.0, text: "Dil apna khol dikhaun" },
+            { time: 96.0, text: "Jaisa hun tere saamne aaun" },
+            { time: 102.0, text: "Ab tak naa khul ke jiya" },
+            { time: 108.0, text: "Befikra tere sath ho jaaun" },
+            { time: 114.0, text: "♫ ♫ ♫" },
+            { time: 115.5, text: "Hun main zara khud se khafa" },
+            { time: 120.0, text: "Tujhse naa kyun pehle mila" },
+            { time: 125.0, text: "Jo ab tu mujhko mila hai" },
+            { time: 130.0, text: "Tujhko hi duniya banaun" },
+            { time: 134.5, text: "Suni saari dopehren" },
+            { time: 139.0, text: "Tere sang hi bitaani hai" },
+            { time: 145.0, text: "Koi aata jaata kissa nahin" },
+            { time: 151.0, text: "Tu meri poori kahani hai" },
+            { time: 160.0, text: "Tu meri poori kahani hai ❤️" }
+        ];
+
+        // --- GLOBAL VARIABLES (FIXED: Declared outside init) ---
+        var scene, camera, renderer, heartMesh, particlesMesh, controls;
+        var isPulsing = true;
+        var time = 0;
+        var lyricOffset = 0; 
+
+        function init() {
+            var container = document.getElementById('canvas-container');
+
+            // 1. Create Scene (FIXED: Using global variable)
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0xffdde1, 0.002);
+
+            // 2. Camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 30;
+
+            // 3. Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+
+            // 4. Lights
+            var ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+            var pointLight = new THREE.PointLight(0xff6b81, 1);
+            pointLight.position.set(10, 10, 20);
+            scene.add(pointLight);
+
+            // 5. Heart Shape
+            var heartShape = new THREE.Shape();
+            var x = 0, y = 0;
+            heartShape.moveTo(x + 5, y + 5);
+            heartShape.bezierCurveTo(x + 5, y + 5, x + 4, y, x, y);
+            heartShape.bezierCurveTo(x - 6, y, x - 6, y + 7, x - 6, y + 7);
+            heartShape.bezierCurveTo(x - 6, y + 11, x - 3, y + 15.4, x + 5, y + 19);
+            heartShape.bezierCurveTo(x + 12, y + 15.4, x + 16, y + 11, x + 16, y + 7);
+            heartShape.bezierCurveTo(x + 16, y + 7, x + 16, y, x + 10, y);
+            heartShape.bezierCurveTo(x + 7, y, x + 5, y + 5, x + 5, y + 5);
+
+            var extrudeSettings = { depth: 2, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 1, bevelThickness: 1 };
+            var geometry = new THREE.ExtrudeGeometry(heartShape, extrudeSettings);
+            var material = new THREE.MeshPhongMaterial({ color: 0xff0040, shininess: 100, specular: 0x222222 });
+            
+            heartMesh = new THREE.Mesh(geometry, material);
+            
+            // --- ROTATION FIX ---
+            geometry.center(); 
+            heartMesh.rotation.z = Math.PI; // Flip 180 degrees
+            heartMesh.rotation.x = 0;       
+            scene.add(heartMesh);
+
+            // 6. Particles
+            var particlesGeometry = new THREE.BufferGeometry();
+            var particlesCount = 500;
+            var posArray = new Float32Array(particlesCount * 3);
+            for(var i = 0; i < particlesCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 100;
+            }
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            var particlesMaterial = new THREE.PointsMaterial({ size: 0.2, color: 0xff0040, transparent: true, opacity: 0.8 });
+            particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+            scene.add(particlesMesh);
+
+            // 7. Controls
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+
+            // Start Animation Loop
+            animate();
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            if (heartMesh && isPulsing) {
+                time += 0.03;
+                var scale = 1 + Math.sin(time) * 0.1;
+                heartMesh.scale.set(scale, scale, scale);
+            }
+
+            if(heartMesh) heartMesh.rotation.y += 0.005;
+            if(particlesMesh) particlesMesh.rotation.y -= 0.002;
+            
+            updateLyrics();
+
+            if(controls) controls.update();
+            if(renderer && scene && camera) renderer.render(scene, camera);
+        }
+
+        function updateLyrics() {
+            var audio = document.getElementById('bg-music');
+            var lyricDiv = document.getElementById('current-lyric');
+            
+            if (audio && !audio.paused) {
+                var currentTime = audio.currentTime - lyricOffset;
+                // Find latest lyric
+                var currentLine = null;
+                for (var i = lyrics.length - 1; i >= 0; i--) {
+                    if (currentTime >= lyrics[i].time) {
+                        currentLine = lyrics[i];
+                        break;
+                    }
+                }
+                
+                if (currentLine) {
+                    if (lyricDiv.innerText !== currentLine.text) {
+                        lyricDiv.classList.remove('active');
+                        setTimeout(function() {
+                            lyricDiv.innerText = currentLine.text;
+                            lyricDiv.classList.add('active');
+                        }, 200); 
+                    }
+                }
+            }
+        }
+
+        // --- BUTTON FUNCTIONS ---
+        // Defined globally so buttons can ALWAYS see them
+        function playMusic() {
+            var music = document.getElementById('bg-music');
+            if(music) {
+                music.play().catch(function(e) { 
+                    alert("Please tap on the screen anywhere first, then click Play!"); 
+                });
+            }
+        }
+
+        function togglePulse() {
+            isPulsing = !isPulsing;
+            var btn = document.getElementById('pulseBtn');
+            if(btn) btn.innerHTML = isPulsing ? "💓 Stop Pulse" : "💓 Start Pulse";
+            if (!isPulsing && heartMesh) heartMesh.scale.set(1, 1, 1);
+        }
+
+        function resetCamera() {
+            if(controls) controls.reset();
+        }
+
+        function openLetter() {
+            var modal = document.getElementById('letter-modal');
+            var lyricContainer = document.getElementById('lyrics-container');
+            if(modal) modal.style.display = 'flex';
+            if(lyricContainer) lyricContainer.style.opacity = '0';
+        }
+
+        function closeLetter(event) {
+            var modal = document.getElementById('letter-modal');
+            var lyricContainer = document.getElementById('lyrics-container');
+            
+            if (event && (event.target.id === 'letter-modal' || event.target.className === 'close-btn')) {
+                if(modal) modal.style.display = 'none';
+                if(lyricContainer) lyricContainer.style.opacity = '1';
+            }
+        }
+
+        window.addEventListener('resize', function() {
+            if(camera && renderer) {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+        });
+
+        // Initialize safely
+        window.onload = init;
+    </script>
+</body>
+</html>
