@@ -11,7 +11,7 @@
         body {
             margin: 0;
             overflow: hidden;
-            background: radial-gradient(circle, #ffdde1, #ee9ca7);
+            background: radial-gradient(circle, #ffdde1, #ee9ca7); /* Pink Background */
             font-family: 'Work Sans', sans-serif;
             color: #d63384;
             user-select: none;
@@ -114,3 +114,32 @@
 
         /* Modal (Letter) */
         #letter-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+            pointer-events: auto;
+        }
+
+        .letter-content {
+            background: #fff0f3;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 85%;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border: 2px solid #ffccd5;
+        }
+
+        .letter-content h2 {
+            font-family: 'Sacramento', cursive;
+            color:
