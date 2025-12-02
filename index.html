@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Sacramento&family=Work+Sans:wght@300;400;600&display=swap" rel="stylesheet">
     
     <style>
-        /* CSS STYLES - This makes it pink and pretty */
+        /* CSS STYLES */
         body {
             margin: 0;
             overflow: hidden;
@@ -17,7 +17,6 @@
             user-select: none;
         }
 
-        /* 3D Container */
         #canvas-container {
             width: 100vw;
             height: 100vh;
@@ -28,7 +27,6 @@
             z-index: 1;
         }
 
-        /* UI Overlay */
         #ui {
             position: absolute;
             top: 0;
@@ -55,7 +53,6 @@
             padding: 0 10px;
         }
 
-        /* Buttons */
         .controls {
             pointer-events: auto;
             display: flex;
@@ -86,7 +83,7 @@
             transform: translateY(-2px);
         }
 
-        /* Modal (Letter) - Hidden by default */
+        /* Modal (Letter) */
         #letter-modal {
             display: none;
             position: fixed;
@@ -142,7 +139,6 @@
             to { transform: scale(1); opacity: 1; }
         }
 
-        /* Mobile Adjustments */
         @media (max-width: 600px) {
             h1 { font-size: 2.5rem; }
             button { font-size: 0.9rem; padding: 8px 15px; }
@@ -153,7 +149,6 @@
 
     <audio id="bg-music" loop>
         <source src="music.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
     </audio>
 
     <div id="canvas-container"></div>
@@ -190,7 +185,6 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     
     <script>
-        // JAVASCRIPT LOGIC
         window.addEventListener('load', () => {
             const container = document.getElementById('canvas-container');
             const scene = new THREE.Scene();
@@ -211,7 +205,7 @@
             pointLight.position.set(10, 10, 20);
             scene.add(pointLight);
 
-            // Heart Shape
+            // --- HEART SHAPE DEFINITION ---
             const heartShape = new THREE.Shape();
             const x = 0, y = 0;
             heartShape.moveTo(x + 5, y + 5);
@@ -227,88 +221,6 @@
             const material = new THREE.MeshPhongMaterial({ color: 0xff0040, shininess: 100, specular: 0x222222 });
             const heartMesh = new THREE.Mesh(geometry, material);
             
-            // --- FIX FOR UPSIDE DOWN HEART ---
-            geometry.center();
-            heartMesh.rotation.x = Math.PI; // Keeps it standing up
-            heartMesh.rotation.z = 0;       // Removed the extra rotation that made it upside down
-            // ---------------------------------
-
-            scene.add(heartMesh);
-
-            // Particles
-            const particlesGeometry = new THREE.BufferGeometry();
-            const particlesCount = 500;
-            const posArray = new Float32Array(particlesCount * 3);
-            for(let i = 0; i < particlesCount * 3; i++) { posArray[i] = (Math.random() - 0.5) * 100; }
-            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-            const particlesMaterial = new THREE.PointsMaterial({ size: 0.2, color: 0xff0040, transparent: true, opacity: 0.8 });
-            const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
-            scene.add(particlesMesh);
-
-            // Controls
-            const controls = new THREE.OrbitControls(camera, renderer.domElement);
-            controls.enableDamping = true;
-
-            let isPulsing = true;
-            let time = 0;
-
-            function animate() {
-                requestAnimationFrame(animate);
-                if (isPulsing) {
-                    time += 0.03;
-                    const scale = 1 + Math.sin(time) * 0.1;
-                    heartMesh.scale.set(scale, scale, scale);
-                }
-                heartMesh.rotation.y += 0.005;
-                particlesMesh.rotation.y -= 0.002;
-                controls.update();
-                renderer.render(scene, camera);
-            }
-            animate();
-
-            window.addEventListener('resize', () => {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            });
-
-            // Interactions
-            const music = document.getElementById('bg-music');
-            const letterModal = document.getElementById('letter-modal');
-            const closeBtn = document.querySelector('.close-btn');
-
-            document.getElementById('music-btn').addEventListener('click', () => {
-                if (music.paused) {
-                    music.play().catch(e => alert("Please tap on the screen first!"));
-                } else {
-                    music.pause();
-                }
-            });
-
-            document.getElementById('pulse-btn').addEventListener('click', function() {
-                isPulsing = !isPulsing;
-                this.innerHTML = isPulsing ? "💓 Stop Pulse" : "💓 Start Pulse";
-                if (!isPulsing) heartMesh.scale.set(1, 1, 1);
-            });
-
-            document.getElementById('reset-btn').addEventListener('click', () => {
-                controls.reset();
-            });
-
-            document.getElementById('letter-btn').addEventListener('click', () => {
-                letterModal.style.display = 'flex';
-            });
-
-            closeBtn.addEventListener('click', () => {
-                letterModal.style.display = 'none';
-            });
-
-            window.addEventListener('click', (event) => {
-                if (event.target == letterModal) {
-                    letterModal.style.display = 'none';
-                }
-            });
-        });
-    </script>
-</body>
-</html>
+            // --- FIX: ROTATION SET TO ZERO ---
+            geometry.center(); 
+            heartMesh
