@@ -56,12 +56,12 @@
         /* --- LYRICS CONTAINER --- */
         #lyrics-container {
             position: absolute;
-            bottom: 140px; /* Adjusted to be clearly visible above buttons */
+            bottom: 15%; /* Positioned nicely above buttons */
             width: 90%;
             text-align: center;
             pointer-events: none;
             z-index: 3;
-            height: 80px; /* Fixed height to prevent jumping */
+            height: 60px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -69,19 +69,19 @@
 
         .lyric-line {
             font-family: 'Sacramento', cursive;
-            font-size: 2.5rem;
+            font-size: 2.2rem; 
             color: #ff0040;
             text-shadow: 2px 2px 0px rgba(255, 255, 255, 1), 0 0 15px rgba(255, 100, 150, 0.8);
             margin: 0;
             opacity: 0;
-            transform: translateY(20px) scale(0.9);
-            transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transform: translateY(15px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
         }
 
         /* Active State */
         .lyric-line.active {
             opacity: 1;
-            transform: translateY(0) scale(1);
+            transform: translateY(0);
         }
 
         .controls {
@@ -165,9 +165,9 @@
 
         @media (max-width: 600px) {
             h1 { font-size: 2.2rem; }
-            .lyric-line { font-size: 1.6rem; padding: 0 10px; }
+            .lyric-line { font-size: 1.5rem; padding: 0 10px; }
             button { font-size: 0.9rem; padding: 8px 15px; }
-            #lyrics-container { bottom: 100px; }
+            #lyrics-container { bottom: 120px; }
         }
     </style>
 </head>
@@ -215,33 +215,43 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     
     <script>
+        // --- SYNC SETTINGS ---
+        // Since you have the intro, offset is 0.
+        // If lyrics are slightly early/late, change this number (e.g., 0.5 or -0.5)
+        const lyricOffset = 0; 
+
         // --- LYRICS DATA ---
-        // Timed to match the video "Tu Meri Poori Kahani - Male Version" (with intro)
+        // Based on "Tu Meri Poori Kahani - Male Version" with 26s Intro
         const lyrics = [
-            { time: 0, text: "Wait for it..." },
-            { time: 26, text: "Tu hai wo jo raat jagaaye" },
-            { time: 29, text: "Tujh par saare khwab lutaaye" },
-            { time: 33, text: "Tu jaise maati ki khushbu" },
-            { time: 38, text: "Dheeme dheeme badhti hi jaaye" },
-            { time: 45, text: "Jo khud se bhi kahi naa" },
-            { time: 50, text: "Tujhe wo baat batani hai" },
-            { time: 56, text: "Koi aata jaata kissa nahin" },
-            { time: 62, text: "Tu meri poori kahani hai" },
-            { time: 70, text: "Koi aata jaata kissa nahin" },
-            { time: 75, text: "Tu meri poori kahani hai" },
-            { time: 85, text: "Dil apna khol dikhaun" },
-            { time: 90, text: "Jaisa hun tere saamne aaun" },
-            { time: 96, text: "Ab tak naa khul ke jiya" },
-            { time: 102, text: "Befikra tere sath ho jaaun" },
-            { time: 109, text: "Hun main zara khud se khafa" },
-            { time: 114, text: "Tujhse naa kyun pehle mila" },
-            { time: 120, text: "Jo ab tu mujhko mila hai" },
-            { time: 125, text: "Tujhko hi duniya banaun" },
-            { time: 129, text: "Suni saari dopehren" },
-            { time: 134, text: "Tere sang hi bitaani hai" },
-            { time: 140, text: "Koi aata jaata kissa nahin" },
-            { time: 146, text: "Tu meri poori kahani hai" },
-            { time: 155, text: "Tu meri poori kahani hai ❤️" }
+            { time: 0, text: "Happy Birthday my love..." },
+            { time: 5, text: "Wait for it..." },
+            { time: 26.5, text: "Tu hai wo jo raat jagaaye" },
+            { time: 30.5, text: "Tujh par saare khwab lutaaye" },
+            { time: 35.0, text: "Tu jaise maati ki khushbu" },
+            { time: 39.0, text: "Dheeme dheeme badhti hi jaaye" },
+            { time: 44.0, text: "..." }, // Pause
+            { time: 47.5, text: "Jo khud se bhi kahi naa..." },
+            { time: 51.5, text: "Tujhe wo baat batani hai" },
+            { time: 56.5, text: "Koi aata jaata kissa nahin" },
+            { time: 61.5, text: "Tu meri poori kahani hai" },
+            { time: 67.0, text: "♫ ♫ ♫" }, // INSTRUMENTAL GAP
+            { time: 70.5, text: "Koi aata jaata kissa nahin" },
+            { time: 75.5, text: "Tu meri poori kahani hai" },
+            { time: 80.0, text: "♫ ♫ ♫" }, // INSTRUMENTAL GAP
+            { time: 85.5, text: "Dil apna khol dikhaun" },
+            { time: 90.0, text: "Jaisa hun tere saamne aaun" },
+            { time: 96.0, text: "Ab tak naa khul ke jiya" },
+            { time: 102.0, text: "Befikra tere sath ho jaaun" },
+            { time: 108.0, text: "♫ ♫ ♫" }, // INSTRUMENTAL GAP
+            { time: 109.5, text: "Hun main zara khud se khafa" },
+            { time: 114.0, text: "Tujhse naa kyun pehle mila" },
+            { time: 119.5, text: "Jo ab tu mujhko mila hai" },
+            { time: 125.0, text: "Tujhko hi duniya banaun" },
+            { time: 129.5, text: "Suni saari dopehren" },
+            { time: 134.0, text: "Tere sang hi bitaani hai" },
+            { time: 139.5, text: "Koi aata jaata kissa nahin" },
+            { time: 145.5, text: "Tu meri poori kahani hai" },
+            { time: 153.0, text: "Tu meri poori kahani hai ❤️" }
         ];
 
         // --- GLOBAL VARIABLES ---
@@ -333,22 +343,19 @@
             const lyricDiv = document.getElementById('current-lyric');
             
             if (audio && !audio.paused) {
-                const currentTime = audio.currentTime;
-                // Find the lyric that matches the current time
-                // We search backwards to find the LATEST lyric that has passed
+                // Apply the OFFSET here to shift everything
+                const currentTime = audio.currentTime - lyricOffset;
+                
+                // Find the latest lyric
                 const currentLine = lyrics.slice().reverse().find(line => currentTime >= line.time);
                 
                 if (currentLine) {
-                    // Only update if the text is different
                     if (lyricDiv.innerText !== currentLine.text) {
-                        // Fade out
                         lyricDiv.classList.remove('active');
-                        
-                        // Wait for fade out, then change text and fade in
                         setTimeout(() => {
                             lyricDiv.innerText = currentLine.text;
                             lyricDiv.classList.add('active');
-                        }, 200); // Small delay for smooth transition
+                        }, 200); 
                     }
                 }
             }
