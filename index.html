@@ -211,37 +211,26 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     
     <script>
-        // --- DELAYED LYRICS TIMINGS (To fix "One lyric ahead" issue) ---
+        // --- LYRICS (Instrumental Gap added between 72s and 90s) ---
         const lyrics = [
             { time: 0, text: "Happy Birthday my love..." },
             { time: 5, text: "Wait for it..." },
             
             // --- Intro Ends ---
             { time: 26.5, text: "Tu hai wo jo raat jagaaye" },
-            
-            // Pushed these back significantly to wait for singer
             { time: 33.5, text: "Tujh par saare khwab lutaaye" }, 
             { time: 39.0, text: "Tu jaise maati ki khushbu" },   
             { time: 45.0, text: "Dheeme dheeme badhti hi jaaye" },
             
-            // Break
-            { time: 50.0, text: "..." }, 
-
             { time: 54.0, text: "Jo khud se bhi kahi naa..." },
             { time: 60.0, text: "Tujhe wo baat batani hai" }, 
             { time: 66.0, text: "Koi aata jaata kissa nahin" }, 
             { time: 72.0, text: "Tu meri poori kahani hai" },  
             
-            // Instrumental
+            // --- INSTRUMENTAL GAP (No lyrics here) ---
             { time: 76.0, text: "♫ ♫ ♫" }, 
 
-            { time: 78.5, text: "Koi aata jaata kissa nahin" },
-            { time: 83.5, text: "Tu meri poori kahani hai" },
-
-            // Instrumental
-            { time: 88.0, text: "♫ ♫ ♫" }, 
-
-            // Next verse
+            // --- Next Verse Starts at 90s ---
             { time: 90.0, text: "Dil apna khol dikhaun" },
             { time: 96.0, text: "Jaisa hun tere saamne aaun" },
             { time: 102.0, text: "Ab tak naa khul ke jiya" },
