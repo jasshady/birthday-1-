@@ -109,21 +109,6 @@
             transform: scale(0.95);
         }
 
-        /* SYNC HELPER (Hidden by default unless enabled in JS) */
-        #debug-time {
-            display: none; /* Change to 'block' in JS to see timer */
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            background: rgba(0,0,0,0.7);
-            color: #fff;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-family: monospace;
-            font-size: 1.2rem;
-            z-index: 1000;
-        }
-
         #letter-modal {
             display: none;
             position: fixed;
@@ -190,8 +175,6 @@
 
     <div id="canvas-container"></div>
     
-    <div id="debug-time">0.00</div>
-
     <div id="ui">
         <h1>Happy Birthday To Mine Babygirl 💖</h1>
         
@@ -228,56 +211,54 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     
     <script>
-        // --- !!! SYNC MODE !!! ---
-        // Set this to TRUE if you want to see the timer in the corner to fix lyrics.
-        // Set to FALSE when you are done.
-        var debugMode = false; 
-
-        // --- UPDATED LYRIC TIMINGS (Faster/Earlier) ---
+        // --- DELAYED LYRICS TIMINGS (To fix "One lyric ahead" issue) ---
         const lyrics = [
             { time: 0, text: "Happy Birthday my love..." },
             { time: 5, text: "Wait for it..." },
             
-            // Intro Ends 26s
+            // --- Intro Ends ---
             { time: 26.5, text: "Tu hai wo jo raat jagaaye" },
-            { time: 30.0, text: "Tujh par saare khwab lutaaye" }, // Earlier
-            { time: 34.0, text: "Tu jaise maati ki khushbu" },   // Earlier
-            { time: 38.0, text: "Dheeme dheeme badhti hi jaaye" },// Earlier
             
-            // First Break
-            { time: 43.0, text: "..." }, 
-
-            { time: 47.5, text: "Jo khud se bhi kahi naa..." },
-            { time: 51.5, text: "Tujhe wo baat batani hai" }, // Earlier
-            { time: 56.5, text: "Koi aata jaata kissa nahin" }, // Earlier
-            { time: 61.5, text: "Tu meri poori kahani hai" },  // Earlier
+            // Pushed these back significantly to wait for singer
+            { time: 33.5, text: "Tujh par saare khwab lutaaye" }, 
+            { time: 39.0, text: "Tu jaise maati ki khushbu" },   
+            { time: 45.0, text: "Dheeme dheeme badhti hi jaaye" },
             
-            // Break / Instrumental
-            { time: 66.0, text: "♫ ♫ ♫" }, 
+            // Break
+            { time: 50.0, text: "..." }, 
 
-            { time: 70.5, text: "Koi aata jaata kissa nahin" },
-            { time: 75.5, text: "Tu meri poori kahani hai" },
-
-            // Break / Instrumental
-            { time: 80.0, text: "♫ ♫ ♫" }, 
-
-            { time: 85.0, text: "Dil apna khol dikhaun" },
-            { time: 89.0, text: "Jaisa hun tere saamne aaun" }, // Earlier
-            { time: 94.0, text: "Ab tak naa khul ke jiya" },    // Earlier
-            { time: 100.0, text: "Befikra tere sath ho jaaun" }, // Earlier
+            { time: 54.0, text: "Jo khud se bhi kahi naa..." },
+            { time: 60.0, text: "Tujhe wo baat batani hai" }, 
+            { time: 66.0, text: "Koi aata jaata kissa nahin" }, 
+            { time: 72.0, text: "Tu meri poori kahani hai" },  
             
-            // Break / Instrumental
-            { time: 106.0, text: "♫ ♫ ♫" }, 
+            // Instrumental
+            { time: 76.0, text: "♫ ♫ ♫" }, 
+
+            { time: 78.5, text: "Koi aata jaata kissa nahin" },
+            { time: 83.5, text: "Tu meri poori kahani hai" },
+
+            // Instrumental
+            { time: 88.0, text: "♫ ♫ ♫" }, 
+
+            // Next verse
+            { time: 90.0, text: "Dil apna khol dikhaun" },
+            { time: 96.0, text: "Jaisa hun tere saamne aaun" },
+            { time: 102.0, text: "Ab tak naa khul ke jiya" },
+            { time: 108.0, text: "Befikra tere sath ho jaaun" },
             
-            { time: 109.5, text: "Hun main zara khud se khafa" },
-            { time: 114.0, text: "Tujhse naa kyun pehle mila" },
-            { time: 119.5, text: "Jo ab tu mujhko mila hai" },
-            { time: 125.0, text: "Tujhko hi duniya banaun" },
-            { time: 129.5, text: "Suni saari dopehren" },
-            { time: 134.0, text: "Tere sang hi bitaani hai" },
-            { time: 139.5, text: "Koi aata jaata kissa nahin" },
-            { time: 145.5, text: "Tu meri poori kahani hai" },
-            { time: 153.0, text: "Tu meri poori kahani hai ❤️" }
+            // Instrumental
+            { time: 114.0, text: "♫ ♫ ♫" }, 
+            
+            { time: 115.5, text: "Hun main zara khud se khafa" },
+            { time: 120.0, text: "Tujhse naa kyun pehle mila" },
+            { time: 125.0, text: "Jo ab tu mujhko mila hai" },
+            { time: 130.0, text: "Tujhko hi duniya banaun" },
+            { time: 134.5, text: "Suni saari dopehren" },
+            { time: 139.0, text: "Tere sang hi bitaani hai" },
+            { time: 145.0, text: "Koi aata jaata kissa nahin" },
+            { time: 151.0, text: "Tu meri poori kahani hai" },
+            { time: 160.0, text: "Tu meri poori kahani hai ❤️" }
         ];
 
         // --- GLOBAL VARIABLES ---
@@ -288,11 +269,6 @@
 
         function init() {
             var container = document.getElementById('canvas-container');
-
-            // Toggle Debug Timer
-            if(debugMode) {
-                document.getElementById('debug-time').style.display = 'block';
-            }
 
             scene = new THREE.Scene();
             scene.fog = new THREE.FogExp2(0xffdde1, 0.002);
@@ -375,11 +351,6 @@
             if (audio && !audio.paused) {
                 var currentTime = audio.currentTime - lyricOffset;
                 
-                // Show debug time if enabled
-                if(debugMode) {
-                    document.getElementById('debug-time').innerText = currentTime.toFixed(2);
-                }
-
                 // Find latest lyric
                 var currentLine = null;
                 for (var i = lyrics.length - 1; i >= 0; i--) {
@@ -401,7 +372,6 @@
             }
         }
 
-        // --- BUTTON FUNCTIONS ---
         function playMusic() {
             var music = document.getElementById('bg-music');
             if(music) {
