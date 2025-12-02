@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sacramento&family=Work+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <audio id="bg-music" loop>
+        <source src="music.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <div id="canvas-container"></div>
+
+    <div id="ui">
+        <h1>Happy Birthday To Mine Babygirl 💖</h1>
+        
+        <div class="controls">
+            <button id="music-btn">🎵 Play Music</button>
+            <button id="pulse-btn">💓 Stop Pulse</button>
+            <button id="reset-btn">📷 Reset View</button>
+            <button id="letter-btn">💌 View Letter</button>
+        </div>
+    </div>
+
+    <div id="letter-modal">
+        <div class="letter-content">
+            <span class="close-btn">&times;</span>
+            <h2>💘 A Birthday Letter 💘</h2>
+            <p><b>Meri Jaan,</b></p>
+            <p>
+                Every time I see you, my heart skips a beat just like this pulsing heart on the screen.
+                You are the sweetest person I've ever known, you bring sweetness to every moment of my life.
+            </p>
+            <p>
+                You are mine darling, mine heart, mine everything. I hope this brings a smile
+                to your beautiful face and reminds you of how much you mean to me. Happy Birthday, my baby !
+            </p>
+            <p><b>Forever yours,<br>Your Sammy 💘</b></p>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    
+    <script src="script.js"></script>
+</body>
+</html>
