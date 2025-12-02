@@ -226,9 +226,13 @@
             const geometry = new THREE.ExtrudeGeometry(heartShape, extrudeSettings);
             const material = new THREE.MeshPhongMaterial({ color: 0xff0040, shininess: 100, specular: 0x222222 });
             const heartMesh = new THREE.Mesh(geometry, material);
+            
+            // --- FIX FOR UPSIDE DOWN HEART ---
             geometry.center();
-            heartMesh.rotation.z = Math.PI;
-            heartMesh.rotation.x = Math.PI;
+            heartMesh.rotation.x = Math.PI; // Keeps it standing up
+            heartMesh.rotation.z = 0;       // Removed the extra rotation that made it upside down
+            // ---------------------------------
+
             scene.add(heartMesh);
 
             // Particles
